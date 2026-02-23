@@ -1,24 +1,19 @@
-//
-//  ContentView.swift
-//  AutoPin Watch App
-//
-//  Created by Dhruv Rasikbhai Jivani on 2/23/26.
-//
-
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        HomeView()
     }
 }
 
 #Preview {
-    ContentView()
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: SavedItemPin.self, configurations: config)
+        return ContentView()
+            .modelContainer(container)
+    } catch {
+        return ContentView()
+    }
 }

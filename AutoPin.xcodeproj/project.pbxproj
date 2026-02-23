@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		51B47DBD2F4CB41400FFC075 /* AutoPin Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 51B47DBC2F4CB41400FFC075 /* AutoPin Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		51B47E792F4CECD900FFC075 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 51B47E782F4CECD900FFC075 /* README.md */; };
+		51B47E7A2F4CECD900FFC075 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 51B47E782F4CECD900FFC075 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +39,7 @@
 /* Begin PBXFileReference section */
 		51B47DB62F4CB41400FFC075 /* AutoPin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoPin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		51B47DBC2F4CB41400FFC075 /* AutoPin Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AutoPin Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		51B47E782F4CECD900FFC075 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -63,6 +66,7 @@
 			children = (
 				51B47DC02F4CB41400FFC075 /* AutoPin Watch App */,
 				51B47DB72F4CB41400FFC075 /* Products */,
+				51B47E782F4CECD900FFC075 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -162,6 +166,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51B47E7A2F4CECD900FFC075 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,6 +174,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51B47E792F4CECD900FFC075 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,6 +323,10 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = AutoPin;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "AutoPin uses health data to detect activity for location saving.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "AutoPin needs access to your location to save and find items on your watch.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "AutoPin needs access to your location to save and find items on your watch.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "AutoPin uses motion data to detect when you're moving to help save locations.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -349,6 +359,10 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = AutoPin;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "AutoPin uses health data to detect activity for location saving.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "AutoPin needs access to your location to save and find items on your watch.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "AutoPin needs access to your location to save and find items on your watch.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "AutoPin uses motion data to detect when you're moving to help save locations.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
