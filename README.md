@@ -129,117 +129,40 @@ AutoPin Watch App/
 
 ---
 
-## 📋 Rubric Alignment & Grade Calculation
+## 📋 Technical Requirements Met
 
-### Evaluation Breakdown
+### 4.1 WatchOS UI (SwiftUI)
+- ✅ Built entirely using SwiftUI
+- ✅ Follows Apple Watch Human Interface Guidelines
+- ✅ Proper use of VStack / HStack / NavigationStack
+- ✅ System fonts and colors
+- ✅ Large tap targets (minimum 44pt)
+- ✅ UI usable on multiple watch sizes
 
-| Category | Marks | Requirements | Status |
-|----------|-------|--------------|--------|
-| **App Idea & WatchOS Suitability** | 15 | Short interaction, glanceable, simple flow | ✅ 15/15 |
-| **SwiftUI UI Design & HIG Compliance** | 20 | SwiftUI, VStack/HStack/NavigationStack, system fonts, large tap targets | ✅ 20/20 |
-| **Feature Implementation** | 25 | Notifications, complication/background feature | ✅ 25/25 |
-| **Code Quality & Structure** | 15 | Modular, clean, well-documented | ✅ 15/15 |
-| **Performance & Accessibility** | 15 | Fast launch, battery efficient, VoiceOver | ✅ 15/15 |
-| **Stability, Testing & Debugging** | 10 | No crashes, proper error handling | ✅ 10/10 |
-| **TOTAL** | **100** | | **✅ 100/100** |
-
----
-
-### Detailed Rubric Score
-
-#### 1. App Idea & WatchOS Suitability (15/15) ✅
-
-- ✅ **Original idea** - Personal item location tracker
-- ✅ **Watch-specific** - Designed for wrist interaction
-- ✅ **Short interactions** - Save takes <10 seconds
-- ✅ **Glanceable** - Status visible at a glance
-- ✅ **Simple flows** - Minimal navigation depth
-
-**Score: 15/15**
-
----
-
-#### 2. SwiftUI UI Design & HIG Compliance (20/20) ✅
-
-- ✅ Built entirely using **SwiftUI**
-- ✅ Proper use of **VStack / HStack / NavigationStack**
-- ✅ **System fonts** and colors used throughout
-- ✅ **Large tap targets** (>44pt minimum)
-- ✅ **Responsive** across watch sizes (40mm, 44mm, Ultra)
-- ✅ Dark gradient theme following **Apple HIG**
-- ✅ SF Symbols for all icons
-
-**Screens Implemented:**
-- HomeView - Quick action buttons
-- NewPinView - Save form with validation
-- PinListView - Filterable item list
-- PinDetailView - Item details with delete
-- NavigationView - Real-time arrow guidance
-
-**Score: 20/20**
-
----
-
-#### 3. Feature Implementation (25/25) ✅
-
-##### Notifications (Required)
+### 4.2 Notifications
 - ✅ Local notifications implemented
-- ✅ Meaningful notifications (proximity alerts, movement detection)
-- ✅ Appropriately timed (when approaching items)
-- ✅ Interactive actions (Save/Dismiss buttons)
+- ✅ Meaningful and appropriately timed
+- ✅ Follows WatchOS notification best practices
+- ✅ Interactive actions implemented
 
-##### Complication / Background Feature (Required)
-- ✅ **WidgetKit Complication** - Shows saved item count
-- ✅ **App Intents** - Siri Shortcuts
-  - "Save my location in AutoPin"
-  - "Find my items in AutoPin"
-- ✅ **Background Task** - Location monitoring
+### 4.3 Complication OR Background Feature
+- ✅ WatchOS complication (WidgetKit)
+- ✅ Siri Shortcut / App Intent
+- ✅ Background location monitoring
 
-**Score: 25/25**
+### 4.4 Data Handling
+- ✅ SwiftData for local storage
+- ✅ In-memory state management
+- ✅ Proper data model with SavedItemPin
 
----
-
-#### 4. Code Quality & Structure (15/15) ✅
-
-- ✅ **Modular architecture** - Clear separation of concerns
-- ✅ **Consistent naming** - camelCase for variables, PascalCase for types
-- ✅ **Well-documented** - Comments on complex logic
-- ✅ **No magic numbers** - Constants properly named
-- ✅ **Error handling** - Try-catch blocks throughout
-- ✅ **Swift best practices** - Modern Swift syntax
-
-**Score: 15/15**
-
----
-
-#### 5. Performance & Accessibility (15/15) ✅
-
-##### Performance
-- ✅ **Fast launch** - No network calls on startup
-- ✅ **Battery efficient** - Low-power Core Motion sampling
-- ✅ **No background work** - Location only when needed
-- ✅ **Efficient storage** - SwiftData local only
-
-##### Accessibility
-- ✅ **Readable text** - System fonts at proper sizes
-- ✅ **VoiceOver labels** - All interactive elements labeled
-- ✅ **High contrast** - White text on dark background
-- ✅ **No color-only info** - Icons accompany all color indicators
-- ✅ **Haptic feedback** - Tactile confirmation for actions
-
-**Score: 15/15**
-
----
-
-#### 6. Stability, Testing & Debugging (10/10) ✅
-
-- ✅ **No crashes** - Proper nil handling
-- ✅ **Graceful degradation** - Handles permission denial
-- ✅ **Edge cases** - Empty states, GPS unavailable
-- ✅ **Comprehensive logging** - Logger utility
-- ✅ **User-friendly errors** - Clear error messages
-
-**Score: 10/10**
+### 4.5 Performance & Accessibility
+- ✅ Quick launch time
+- ✅ No unnecessary background work
+- ✅ Respects battery constraints
+- ✅ Readable text sizes
+- ✅ VoiceOver labels on interactive elements
+- ✅ Adequate color contrast
+- ✅ No reliance on color alone
 
 ---
 
@@ -315,13 +238,16 @@ Cmd + R
 
 ### Main Screens
 
-| Screen | Description |
-|--------|-------------|
-| HomeView | Quick save/find buttons |
-| NewPinView | Save location form |
-| PinListView | All saved items |
-| PinDetailView | Item details |
-| NavigationView | Arrow to item |
+<div align="center">
+
+| | | |
+|:---:|:---:|:---:|
+| <img src="AutoPin Watch App/screenshots/home.png" width="200"/> | <img src="AutoPin Watch App/screenshots/save_pin.png" width="200"/> | <img src="AutoPin Watch App/screenshots/my_items.png" width="200"/> |
+| **Home** | **Save Pin** | **My Items** |
+| <img src="AutoPin Watch App/screenshots/item_details.png" width="200"/> | <img src="AutoPin Watch App/screenshots/item_distance.png" width="200"/> | <img src="AutoPin Watch App/screenshots/delete.png" width="200"/> |
+| **Item Details** | **Distance** | **Delete** |
+
+</div>
 
 ---
 
@@ -386,18 +312,6 @@ This project is submitted as a capstone assignment. All code is original work.
 - [x] Proper project structure
 - [x] Tested on simulator
 - [x] Documentation complete
-
----
-
-## 🏆 Final Grade
-
-<div align="center">
-
-### **100 / 100 (A+)**
-
-*Capstone-ready | Industry-relevant | Portfolio-quality*
-
-</div>
 
 ---
 
