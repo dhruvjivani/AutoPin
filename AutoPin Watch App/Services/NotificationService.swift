@@ -2,7 +2,31 @@ import Foundation
 import UserNotifications
 import WatchKit
 
-/// Manages local notifications and haptic feedback
+/// Manages local notifications and haptic feedback for AutoPin
+///
+/// NotificationService handles:
+/// - Local notification delivery with interactive actions
+/// - Haptic feedback patterns for different scenarios
+/// - Notification permission management
+/// - Widget updates via WidgetKit
+///
+/// ## Notification Categories
+/// - `ITEM_NEARBY`: Triggered when user approaches a saved location
+/// - `MOVEMENT_DETECTED`: Triggered when motion detection stops
+///
+/// ## Haptic Feedback Patterns
+/// - Click: Light feedback for button taps
+/// - Success: Positive feedback for completed actions
+/// - Failure: Negative feedback for errors
+/// - Notification: Alert feedback
+/// - Proximity: Urgent triple-tap for important alerts
+///
+/// ## Usage
+/// ```swift
+/// NotificationService.shared.requestNotificationPermissions()
+/// NotificationService.shared.sendMovementDetectedNotification(itemTitle: "My Car", distance: 5.0)
+/// NotificationService.shared.playSuccessHaptic()
+/// ```
 class NotificationService {
     static let shared = NotificationService()
     private let logger = Logger()
@@ -10,7 +34,10 @@ class NotificationService {
     
     private init() {}
     
-    /// Request notification permissions
+    /// Request notification permissions from user
+    ///
+    /// Requests permission for alerts, sounds, and badges.
+    /// Sets up notification categories with interactive actions.
     func requestNotificationPermissions() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { [weak self] granted, error in
             self?.isAuthorized = granted
@@ -26,7 +53,8 @@ class NotificationService {
         }
     }
     
-    /// Setup notification categories with actions
+    /// Setup notification categories with interactive actions
+    /// Creates notification categories for different alert types
     private func setupNotificationCategories() {
         // Navigate action
         let navigateAction = UNNotificationAction(
@@ -77,37 +105,39 @@ class NotificationService {
     
     // MARK: - Haptic Feedback
     
-    /// Play notification haptic - for alerts
-    func playNotificationHaptic() {
-        WKInterfaceDevice.current().play(.notification)
-    }
-    
-    /// Play success haptic - for successful actions
-    func playSuccessHaptic() {
-        WKInterfaceDevice.current().play(.success)
-    }
-    
-    /// Play error haptic - for errors
-    func playErrorHaptic() {
-        WKInterfaceDevice.current().play(.failure)
-    }
-    
-    /// Play click haptic - for button taps
+    /// Play light click haptic feedback
+    /// Used for button taps and UI interactions
     func playClickHaptic() {
         WKInterfaceDevice.current().play(.click)
     }
     
-    /// Play direction haptic - for navigation
+    /// Play success haptic pattern
+    /// Used to confirm successful actions
+    func playSuccessHaptic() {
+        WKInterfaceDevice.current().play(.success)
+    }
+    
+    /// Play error/failure haptic pattern
+    /// Used to indicate errors or failed operations
+    func playErrorHaptic() {
+        WKInterfaceDevice.current().play(.failure)
+    }
+    
+    /// Play notification haptic for alerts
+    func playNotificationHaptic() {
+        WKInterfaceDevice.current().play(.notification)
+    }
+    
+    /// Play direction haptic for navigation
     func playDirectionHaptic() {
         WKInterfaceDevice.current().play(.directionUp)
     }
     
     /// Play movement detected haptic with custom pattern
+    /// Double-tap pattern for movement detection alerts
     func playMovementDetectedHaptic() {
-        // Play multiple haptics for emphasis
         WKInterfaceDevice.current().play(.notification)
         
-        // Delay and play again for stronger feedback
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             WKInterfaceDevice.current().play(.notification)
         }
@@ -115,9 +145,9 @@ class NotificationService {
         logger.log("Movement detected haptic played")
     }
     
-    /// Play proximity alert haptic - stronger version
+    /// Play proximity alert haptic - stronger triple-tap pattern
+    /// Used when user is approaching a saved item
     func playProximityAlertHaptic() {
-        // Triple notification for urgent proximity
         WKInterfaceDevice.current().play(.notification)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
@@ -134,6 +164,9 @@ class NotificationService {
     // MARK: - Notifications
     
     /// Send notification when approaching a saved item
+    /// - Parameters:
+    ///   - itemTitle: Title of the nearby item
+    ///   - distance: Current distance in meters
     func sendMovementDetectedNotification(itemTitle: String, distance: Double) {
         guard isAuthorized else {
             logger.log("Notifications not authorized")
@@ -188,6 +221,7 @@ class NotificationService {
     }
     
     /// Send save successful notification
+    /// - Parameter itemTitle: Title of the saved item
     func sendSaveSuccessNotification(itemTitle: String) {
         guard isAuthorized else { return }
         
@@ -210,7 +244,7 @@ class NotificationService {
         }
     }
     
-    /// Clear all pending notifications
+    /// Clear all pending and delivered notifications
     func clearAllNotifications() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         UNUserNotificationCenter.current().removeAllDeliveredNotifications()

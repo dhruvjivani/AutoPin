@@ -264,16 +264,27 @@ struct NewPinView: View {
     
     private func savePin() {
         guard let location = locationService.currentLocation else {
-            errorMessage = "Unable to get current location. Please try again."
+            errorMessage = "Unable to get current location. Please ensure location services are enabled and try again."
             showError = true
             NotificationService.shared.playErrorHaptic()
+            logger.logWarning("Save pin failed: no location available")
             return
         }
         
         guard !title.trimmingCharacters(in: .whitespaces).isEmpty else {
-            errorMessage = "Please enter an item name."
+            errorMessage = "Please enter a name for this item."
             showError = true
             NotificationService.shared.playErrorHaptic()
+            logger.logWarning("Save pin failed: empty title")
+            return
+        }
+        
+        // Validate location accuracy (GPS might have poor accuracy indoors)
+        if locationService.currentLocation == nil {
+            errorMessage = "Location accuracy too low. Please try in an open area."
+            showError = true
+            NotificationService.shared.playErrorHaptic()
+            logger.logWarning("Save pin failed: poor location accuracy")
             return
         }
         

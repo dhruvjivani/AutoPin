@@ -3,13 +3,34 @@ import CoreLocation
 import SwiftData
 import Combine
 
-/// Manages location acquisition for saving item locations
+/// Manages location acquisition and proximity detection for AutoPin
+///
+/// LocationService handles:
+/// - Real-time GPS location tracking
+/// - Location authorization management  
+/// - Proximity alerts when user approaches saved items
+/// - Distance calculations using Haversine formula
+///
+/// ## Usage
+/// ```swift
+/// let locationService = LocationService()
+/// locationService.requestCurrentLocation()
+/// let distance = pin.distance(from: (locationService.currentLocation!.latitude, locationService.currentLocation!.longitude))
+/// ```
+///
+/// - Important: Set model context after initialization for proximity detection to work
 class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
+    /// Currently detected GPS coordinate
     @Published var currentLocation: CLLocationCoordinate2D?
+    /// Current altitude in meters
     @Published var currentAltitude: Double = 0.0
+    /// Current location authorization status
     @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    /// Whether location service is currently acquiring location
     @Published var isLocating: Bool = false
+    /// The nearest saved item (when proximity alert triggers)
     @Published var nearbyItem: SavedItemPin?
+    /// Whether user is approaching a saved item
     @Published var isApproaching: Bool = false
     
     private var locationManager: CLLocationManager?
@@ -17,22 +38,22 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var modelContext: ModelContext?
     private var hasTriggeredProximity: Set<UUID> = []
     private var lastProximityCheck: Date = Date()
-    private let proximityCheckInterval: TimeInterval = 5.0 // Check every 5 seconds
-    private let proximityThreshold: Double = 10.0 // meters - max detection range (start detecting from 10m)
-    private let minimumTriggerDistance: Double = 2.0 // stop triggering when within 2m (near)
+    private let proximityCheckInterval: TimeInterval = 5.0
+    private let proximityThreshold: Double = 10.0
+    private let minimumTriggerDistance: Double = 2.0
     
     override init() {
         super.init()
         setupLocationManager()
     }
     
+    /// Initialize location manager with proper configuration
     private func setupLocationManager() {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         locationManager?.distanceFilter = 20 // Update every 20 meters
         
-        // Check and request permission
         let status = locationManager?.authorizationStatus ?? .notDetermined
         if status == .notDetermined {
             locationManager?.requestWhenInUseAuthorization()
@@ -41,18 +62,20 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    /// Set the model context for proximity checking
+    /// Set the SwiftData model context for proximity checking
+    /// - Parameter context: ModelContext from SwiftUI environment
     func setModelContext(_ context: ModelContext) {
         self.modelContext = context
     }
     
-    /// Request a single location update
+    /// Request a single location update immediately
     func requestCurrentLocation() {
         isLocating = true
         locationManager?.requestLocation()
     }
     
     /// Start continuous location updates
+    /// - Note: Updates are filtered by 20-meter distance filter for battery efficiency
     func startUpdatingLocation() {
         locationManager?.startUpdatingLocation()
     }
@@ -62,7 +85,7 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager?.stopUpdatingLocation()
     }
     
-    /// Reset proximity triggers (e.g., when user dismisses notification)
+    /// Reset proximity triggers (called when user dismisses notification)
     func resetProximityTriggers() {
         hasTriggeredProximity.removeAll()
         nearbyItem = nil
@@ -71,6 +94,10 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // MARK: - CLLocationManagerDelegate
     
+    /// Called when location manager successfully retrieves location
+    /// - Parameters:
+    ///   - manager: The location manager object
+    ///   - locations: Array of CLLocation objects (last is most recent)
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         
@@ -79,21 +106,27 @@ class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.currentAltitude = location.altitude
             self.isLocating = false
             
-            // Check proximity to saved items (with debounce)
             self.checkProximity(to: location)
         }
     }
     
+    /// Called when location manager fails to retrieve location
+    /// - Parameters:
+    ///   - manager: The location manager object
+    ///   - error: Error describing the failure
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         DispatchQueue.main.async {
             self.isLocating = false
-            // Only log significant errors
             if let clError = error as? CLError, clError.code != .locationUnknown {
                 self.logger.logError(error)
             }
         }
     }
     
+    /// Called when location authorization status changes
+    /// - Parameters:
+    ///   - manager: The location manager object
+    ///   - status: New authorization status
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         DispatchQueue.main.async {
             self.authorizationStatus = status

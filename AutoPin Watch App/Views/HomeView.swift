@@ -47,6 +47,9 @@ struct HomeView: View {
                                     .foregroundColor(.white)
                             }
                             .padding(.top, 4)
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("AutoPin")
+                            .accessibilityHint("Location-based item tracker")
                             
                             Divider().background(Color.white.opacity(0.1))
                             
@@ -57,12 +60,16 @@ struct HomeView: View {
                                 }
                                 .buttonStyle(PlainButtonStyle())
                                 .simultaneousGesture(TapGesture().onEnded { NotificationService.shared.playClickHaptic() })
+                                .accessibilityLabel("Save Location")
+                                .accessibilityHint("Start a new location pin")
                                 
                                 NavigationLink(destination: PinListView()) {
                                     quickActionButton(icon: "list.bullet.circle.fill", title: "My Items", color: .green, count: pins.count)
                                 }
                                 .buttonStyle(PlainButtonStyle())
                                 .simultaneousGesture(TapGesture().onEnded { NotificationService.shared.playClickHaptic() })
+                                .accessibilityLabel("My Items")
+                                .accessibilityHint("View all saved locations. \(pins.count) items saved.")
                             }
                             .padding(.horizontal, 10)
                             
@@ -83,6 +90,8 @@ struct HomeView: View {
                                             }
                                             .buttonStyle(PlainButtonStyle())
                                             .simultaneousGesture(TapGesture().onEnded { NotificationService.shared.playClickHaptic() })
+                                            .accessibilityLabel(pin.title)
+                                            .accessibilityHint("\(pin.category), saved \(pin.timestamp.relativeTimeString)")
                                         }
                                     }
                                     .padding(.horizontal, 10)
@@ -95,6 +104,9 @@ struct HomeView: View {
                             statusBar
                                 .padding(.horizontal, 10)
                                 .padding(.bottom, 8)
+                                .accessibilityElement(children: .combine)
+                                .accessibilityLabel("Location Status")
+                                .accessibilityHint(locationService.authorizationStatus == .authorizedWhenInUse || locationService.authorizationStatus == .authorizedAlways ? "Location tracking is active" : "Location tracking is off")
                         }
                         .frame(minHeight: geometry.size.height)
                     }
